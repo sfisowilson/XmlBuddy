@@ -6,6 +6,10 @@
     "declaration": true,
     "declarationMap": true,
     "inlineSources": true,
+    "paths": {
+      "xml2js": ["node_modules/xml2js"],
+      "ace-builds": ["node_modules/ace-builds"]
+    },
     "types": []
   },
   "exclude": [

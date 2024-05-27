@@ -40,3 +40,34 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+
+# Ignore environment files
+src/environments/environment.prod.ts
+src/environments/environment.ts
+
+# Ignore example specific files
+example/node_modules/
+example/dist/
+example/.angular/
+example/.angular-cli.json
+example/coverage/
+example/tmp/
+example/out-tsc/
+example/src/**/*.ngfactory.ts
+example/src/**/*.ngsummary.json
+example/src/**/*.ngstyle.ts
+example/src/**/__ng_typecheck__.ts
+
+# Ignore library specific files
+projects/xml-buddy/node_modules/
+projects/xml-buddy/dist/
+projects/xml-buddy/.angular/
+projects/xml-buddy/.angular-cli.json
+projects/xml-buddy/coverage/
+projects/xml-buddy/tmp/
+projects/xml-buddy/out-tsc/
+projects/xml-buddy/src/**/*.ngfactory.ts
+projects/xml-buddy/src/**/*.ngsummary.json
+projects/xml-buddy/src/**/*.ngstyle.ts
+projects/xml-buddy/src/**/__ng_typecheck__.ts

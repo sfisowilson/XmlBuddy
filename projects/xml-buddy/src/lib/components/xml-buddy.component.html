@@ -1,0 +1,16 @@
+<div *ngIf="editType === 'inplace'">
+  <div #editor id="editor" style="height: 500px; width: 100%;"></div>
+</div>
+
+<div *ngIf="editType === 'inForm'" class="container">
+  <form>
+    <div *ngFor="let key of (formFields | keyvalue)">
+      <div class="form-group">
+        <label>{{ key.key }}</label>
+        <input type="text"  class="form-control" name="{{ key.key }}">
+      </div>
+    </div>
+  </form>
+</div>
+
+<button class="btn btn-primary mt-3" (click)="saveChanges()">Save Changes</button>

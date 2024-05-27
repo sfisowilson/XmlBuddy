@@ -2,5 +2,5 @@
  * Public API Surface of xml-buddy
  */
 
-export * from './lib/xml-buddy.service';
-export * from './lib/xml-buddy.component';
+export * from './lib/services/xml-buddy.service';
+export * from './lib/components/xml-buddy.component';

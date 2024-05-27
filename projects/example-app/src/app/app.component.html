@@ -1,0 +1,18 @@
+<h2>Using XML Buddy to edit my xml inplace</h2>
+
+<xml-buddy 
+  [xmlString]="sampleXml"
+  editType="inplace"
+></xml-buddy>
+
+<br>
+
+<br>
+<hr>
+<h2>Using XML Buddy to edit my xml inForm</h2>
+
+<xml-buddy 
+  [xmlString]="sampleXml"
+  editType="inForm"
+  (onLoadError)="onLoadError($event)"
+></xml-buddy>
