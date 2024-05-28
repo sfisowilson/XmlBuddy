@@ -45,17 +45,20 @@ import { Component } from '@angular/core';
   template: `
     <div class="container">
       <h1>XML Buddy Example</h1>
-      <app-xml-editor
-        [xmlString]="xmlData"
-        [editType]="editMode"
-        (onSave)="handleSave($event)">
-      </app-xml-editor>
+      <xml-buddy 
+        [xmlString]="sampleXml"
+        [fieldDefinitions]="sampleJson"
+        editType="inForm"
+        [themeColors]="themeColors"
+        (onLoadError)="onLoadError($event)"
+        (onSave)="handleSave($event)"
+      ></xml-buddy>
     </div>
   `,
   styles: []
 })
 export class AppComponent {
-  xmlData: string = `
+  sampleXml = `
     <note>
       <to>Tove</to>
       <from>Jani</from>
@@ -63,10 +66,31 @@ export class AppComponent {
       <body>Don't forget me this weekend!</body>
     </note>
   `;
+
+  sampleJson =  {
+    "note.heading": {
+      "required": true
+    },
+  };
+
+  themeColors = {
+    formBackground: '#f8f9fa',
+    labelColor: '#495057',
+    inputBorderColor: '#ced4da',
+    buttonColor: '#007bff'
+  };
+
   editMode: 'inplace' | 'inForm' = 'inForm';
 
-  handleSave(updatedXml: string) {
-    console.log('Updated XML:', updatedXml);
+  onLoadError(event: string) {
+    console.log("Failed to load editor: ", event);
+  }
+
+  handleSave(event: { xml: string, validationResult?: any }) {
+    console.log('Updated XML:', event.xml);
+    if (event.validationResult) {
+      console.log('Validation Errors:', event.validationResult);
+    }
   }
 }
 ```
@@ -74,10 +98,13 @@ export class AppComponent {
 ### Component Inputs
 - **`xmlString`** (string): The XML string to be edited.
 - **`editType`** ('inplace' | 'inForm'): The editing mode. Use inplace for inline editing and inForm for form-based editing.
+- **`fieldDefinitions`**: JSON object containing fields and validation rules
+- **`themeColors`**: Object containing theme colors
 
 ### Component Outputs
 
-**`onSave`** (EventEmitter<string>): Emits the updated XML string when changes are saved.
+**`onSave`** (EventEmitter<any>): Emits the updated XML string when changes are saved.
+**`onLoadError`** (EventEmitter<string>): Emits an error message
 
 
 ## Example Project
