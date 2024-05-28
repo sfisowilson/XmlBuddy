@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Input, Output, ViewChild, output } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, ViewChild, ChangeDetectorRef, output } from '@angular/core';
 import { XmlBuddyService } from '../services/xml-buddy.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -15,22 +15,27 @@ import * as xml2js from 'xml2js';
 
 export class XmlBuddyComponent implements AfterViewInit{
   onLoadError = output<string>();
-  onSave = output<string>();
+  onSave = output<any>();
 
   @Input() xmlString: string = "";
   @Input() editType: 'inplace' | 'inForm' = 'inplace';
+  @Input() fieldDefinitions: any = null; // JSON object containing fields and validation rules
+  @Input() themeColors: { [key: string]: string } = {}; // Object containing theme colors
+
   @ViewChild('editor') editorRef!: ElementRef;
   editor: any;
 
   public xmlData: any;
   public formFields: any;
+  public formErrors: any = {};
+  fieldKeys?: string[] = [];
 
-  constructor(private xmlBuddyService: XmlBuddyService) {}
+  constructor(private cdr: ChangeDetectorRef) {}
 
   ngAfterViewInit(): void {
     if (this.editType === 'inplace') {
       this.setupAceEditor();
-    } else if  (this.editType === 'inForm') {
+    } else if (this.editType === 'inForm') {
       this.parseXmlToFormFields();
     }
   }
@@ -55,6 +60,8 @@ export class XmlBuddyComponent implements AfterViewInit{
         this.xmlData = result;
         this.formFields = this.flattenObject(this.xmlData);
         this.removeNestedNodesWithoutText();
+        this.fieldKeys = this.getFieldKeys();
+        this.cdr.detectChanges(); // Mark changes
       } else {
         this.onLoadError.emit(err.message);
       }
@@ -75,14 +82,30 @@ export class XmlBuddyComponent implements AfterViewInit{
   saveChanges(): void {
     if (this.editType === 'inplace') {
       const updatedXml = this.editor.getValue();
-      this.onSave.emit(updatedXml);
+      this.onSave.emit({ xml: updatedXml });
     } else if (this.editType === 'inForm') {
-      // Handle form data as needed
-      // Convert form fields back to XML
+      const validationResult = this.validateFormFields();
       const updatedXml = this.buildXmlFromFormFields();
-      console.log(updatedXml);
-      this.onSave.emit(updatedXml);
+      this.onSave.emit({ xml: updatedXml, validationResult });
     }
+  }
+
+  validateFormFields(): any {
+    const errors: any = {};
+    if (this.fieldDefinitions) {
+      for (const field in this.fieldDefinitions) {
+        const rules = this.fieldDefinitions[field];
+        if (rules.required && !this.formFields[field]) {
+          errors[field] = 'This field is required.';
+        }
+        if (rules.maxLength && this.formFields[field]?.length > rules.maxLength) {
+          errors[field] = `This field must be less than ${rules.maxLength} characters.`;
+        }
+        // Add more validation rules as needed
+      }
+    }
+    this.formErrors = errors;
+    return errors;
   }
 
   flattenObject(obj: any, parent: string = '', res: any = {}): any {
@@ -95,6 +118,12 @@ export class XmlBuddyComponent implements AfterViewInit{
       }
     }
     return res;
+  }
+
+  extractFieldName(fieldName: string): string {
+    const parts = fieldName.split('.');
+    const lastPart = parts[parts.length - 1];
+    return lastPart.charAt(0).toUpperCase() + lastPart.slice(1);
   }
 
   unflattenObject(data: any): any {
@@ -113,5 +142,14 @@ export class XmlBuddyComponent implements AfterViewInit{
     const builder = new xml2js.Builder();
     const updatedXml = builder.buildObject(unflattenedObject);
     return updatedXml;
+  }
+
+  getFieldKeys(): string[] {
+    // If fieldDefinitions are provided, only include those keys that exist in both XML and fieldDefinitions
+    if (this.fieldDefinitions) {
+      return Object.keys(this.fieldDefinitions).filter(key => this.formFields.hasOwnProperty(key));
+    } else {
+      return Object.keys(this.formFields);
+    }
   }
 }

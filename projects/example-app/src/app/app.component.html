@@ -13,6 +13,9 @@
 
 <xml-buddy 
   [xmlString]="sampleXml"
+  [fieldDefinitions]="sampleJson"
   editType="inForm"
+  [themeColors]="themeColors"
   (onLoadError)="onLoadError($event)"
+  (onSave)="handleSave($event)"
 ></xml-buddy>

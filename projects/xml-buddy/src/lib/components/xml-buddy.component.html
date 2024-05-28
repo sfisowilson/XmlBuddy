@@ -2,15 +2,16 @@
   <div #editor id="editor" style="height: 500px; width: 100%;"></div>
 </div>
 
-<div *ngIf="editType === 'inForm'" class="container">
-  <form>
-    <div *ngFor="let key of (formFields | keyvalue)">
-      <div class="form-group">
-        <label>{{ key.key }}</label>
-        <input type="text"  class="form-control" name="{{ key.key }}">
+<div *ngIf="editType === 'inForm'" class="container mt-4" [ngStyle]="{'background-color': themeColors['formBackground']}">
+  <form (ngSubmit)="saveChanges()" class="p-3" [ngStyle]="{'background-color': themeColors['formBackground']}">
+    <div *ngFor="let field of fieldKeys" class="mb-3">
+      <div *ngIf="formFields[field] !== undefined">
+        <label [ngStyle]="{'color': themeColors['labelColor']}">{{ extractFieldName(field) }}</label>
+        <input [(ngModel)]="formFields[field]" name="{{ field }}" class="form-control" [ngClass]="{'is-invalid': formErrors[field]}" [ngStyle]="{'border-color': themeColors['inputBorderColor']}">
+        <div *ngIf="formErrors[field]" class="invalid-feedback">{{ formErrors[field] }}</div>
       </div>
     </div>
+    <button type="submit" class="btn btn-primary" [ngStyle]="{'background-color': themeColors['buttonColor']}">Save</button>
   </form>
 </div>
 
-<button class="btn btn-primary mt-3" (click)="saveChanges()">Save Changes</button>
