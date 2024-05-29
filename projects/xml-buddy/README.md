@@ -1,24 +1,97 @@
-# XmlBuddy
+# XML Buddy
 
-This library was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.0.
+XML Buddy is an Angular library that simplifies reading, displaying, and editing XML data. It provides two editing modes: inline editing using the Ace editor and form-based editing.
 
-## Code scaffolding
+## Features
+- **Inline Editing:** Edit XML directly in the Ace editor.
+- **Form Editing:** Edit XML using a form interface, where each tag is represented as a form field.
+- **Automatic XML Parsing:** Automatically parse XML into editable fields.
+- **Event Emission:** Emit updated XML upon saving changes.
 
-Run `ng generate component component-name --project xml-buddy` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module --project xml-buddy`.
-> Note: Don't forget to add `--project xml-buddy` or else it will be added to the default project in your `angular.json` file. 
 
-## Build
+## Installation
+Install the library from npm:
 
-Run `ng build xml-buddy` to build the project. The build artifacts will be stored in the `dist/` directory.
+```bash
+npm install xml-buddy
+```
 
-## Publishing
+## Usage
+### Importing the Module
+First, import the **`XmlBuddyModule`** into your Angular application module:
 
-After building your library with `ng build xml-buddy`, go to the dist folder `cd dist/xml-buddy` and run `npm publish`.
+```typescript
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { AppComponent } from './app.component';
+import { XmlBuddyModule } from 'xml-buddy';
 
-## Running unit tests
+@NgModule({
+  declarations: [AppComponent],
+  imports: [BrowserModule, XmlBuddyModule],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+```
 
-Run `ng test xml-buddy` to execute the unit tests via [Karma](https://karma-runner.github.io).
+### Using the Component
+You can use the **`XmlBuddyComponent`** in your component template. Specify the XML string and the edit mode (**`inplace`** for inline editing and **`inForm`** for form-based editing).
 
-## Further help
+```typescript
+import { Component } from '@angular/core';
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+@Component({
+  selector: 'app-root',
+  template: `
+    <div class="container">
+      <h1>XML Buddy Example</h1>
+      <app-xml-editor
+        [xmlString]="xmlData"
+        [editType]="editMode"
+        (onSave)="handleSave($event)">
+      </app-xml-editor>
+    </div>
+  `,
+  styles: []
+})
+export class AppComponent {
+  xmlData: string = `
+    <note>
+      <to>Tove</to>
+      <from>Jani</from>
+      <heading>Reminder</heading>
+      <body>Don't forget me this weekend!</body>
+    </note>
+  `;
+  editMode: 'inplace' | 'inForm' = 'inForm';
+
+  handleSave(updatedXml: string) {
+    console.log('Updated XML:', updatedXml);
+  }
+}
+```
+
+### Component Inputs
+- **`xmlString`** (string): The XML string to be edited.
+- **`editType`** ('inplace' | 'inForm'): The editing mode. Use inplace for inline editing and inForm for form-based editing.
+
+### Component Outputs
+
+**`onSave`** (EventEmitter<string>): Emits the updated XML string when changes are saved.
+
+
+## Example Project
+You can find an example project in the **`example`** directory of this repository. To run the example:
+
+```bash
+cd example
+npm install
+ng serve
+```
+Navigate to **`http://localhost:4200`** to see XML Buddy in action.
+
+## Contributing
+Contributions are welcome! Please open an issue or submit a pull request on [GitHub.](https://github.com/sfisowilson/XmlBuddy)
+
+## License
+This project is licensed under the MIT License.

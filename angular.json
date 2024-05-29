@@ -12,10 +12,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
-            "project": "projects/xml-buddy/ng-package.json",
-            "styles": [
-              "node_modules/bootstrap/dist/css/bootstrap.min.css"
-            ]
+            "project": "projects/xml-buddy/ng-package.json"
           },
           "configurations": {
             "production": {

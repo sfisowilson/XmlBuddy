@@ -91,7 +91,7 @@ ng serve
 Navigate to **`http://localhost:4200`** to see XML Buddy in action.
 
 ## Contributing
-Contributions are welcome! Please open an issue or submit a pull request on GitHub.
+Contributions are welcome! Please open an issue or submit a pull request on [GitHub.](https://github.com/sfisowilson/XmlBuddy)
 
 ## License
 This project is licensed under the MIT License.

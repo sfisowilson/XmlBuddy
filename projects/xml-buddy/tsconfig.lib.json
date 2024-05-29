@@ -10,7 +10,12 @@
       "xml2js": ["node_modules/xml2js"],
       "ace-builds": ["node_modules/ace-builds"]
     },
+    "baseUrl": "",
     "types": []
+  },
+  "angularCompilerOptions": {
+    "enableIvy": true,
+    "compilationMode": "partial"
   },
   "exclude": [
     "**/*.spec.ts"
